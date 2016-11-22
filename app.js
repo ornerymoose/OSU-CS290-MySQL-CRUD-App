@@ -11,13 +11,13 @@ app.use(express.static('public'));
 
 app.get('/',function(req,res,next){
   var context = {};
-  mysql.pool.query('SELECT * FROM todo', function(err, rows, fields){
+  mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
     if(err){
       next(err);
       return;
     }
-    context.results = JSON.stringify(rows);
-    res.render('home', context);
+    //context.results = JSON.stringify(rows);
+    res.render('home', {rows: rows});
   });
 });
 

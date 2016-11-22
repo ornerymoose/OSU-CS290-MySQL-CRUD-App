@@ -1,4 +1,28 @@
-<h3>hello home.handlebars</h3>
+<h3>Workouts</h3>
 
-<h6>{{prop1}}</h6>
-<h6>{{results}}</h6>
+{{#if rows}}
+<table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    	<tr>
+			<th>Name</th>
+			<th>Reps</th>
+			<th>Weight</th>
+			<th>Date</th>
+			<th>Lbs</th>
+    	</tr>
+    </thead>
+    <tbody>
+    	{{#each rows}}
+    	<tr>
+    		<td>{{name}}</td>
+    		<td>{{reps}}</td>
+    		<td>{{weight}}</td>
+    		<td>{{date}}</td>
+    		<td>{{lbs}}</td>
+    	</tr>
+    	{{/each}}
+    </tbody>
+
+</table>
+{{/if}}
+
