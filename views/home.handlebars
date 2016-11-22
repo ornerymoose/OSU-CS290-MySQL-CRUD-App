@@ -9,6 +9,7 @@
 			<th>Weight</th>
 			<th>Date</th>
 			<th>Lbs</th>
+			<th>Action</th>
     	</tr>
     </thead>
     <tbody>
@@ -19,6 +20,14 @@
     		<td>{{weight}}</td>
     		<td>{{date}}</td>
     		<td>{{lbs}}</td>
+    		<td>
+				<button type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</button>
+				<button type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-trash"></span>
+				</button>
+    		</td>
     	</tr>
     	{{/each}}
     </tbody>
