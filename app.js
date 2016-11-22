@@ -1,4 +1,5 @@
 var express = require('express');
+var mysql = require('./dbcon.js');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var request = require('request');
@@ -13,6 +14,24 @@ app.get('/', function(req, res){
 	context.prop1 = "hi world...";
 	res.render('home', context);
 })
+
+app.get('/reset-table',function(req,res,next){
+  var context = {};
+  mysql.pool.query('USE cs290_pardyd', function (err){
+  	if (err) throw err;
+  	mysql.pool.query("DROP TABLE IF EXISTS todo", function(err){
+    	var createString = "CREATE TABLE todo(" +
+    	"id INT PRIMARY KEY AUTO_INCREMENT," +
+    	"name VARCHAR(255) NOT NULL," +
+    	"done BOOLEAN," +
+    	"due DATE)";
+    	mysql.pool.query(createString, function(err){
+      		context.results = "Table reset";
+      		res.render('home',context);
+    	})
+  	});
+  })
+});
 
 app.use(function(req,res){
   res.status(404);
