@@ -1,5 +1,6 @@
 var express = require('express');
 var mysql = require('./dbcon.js');
+var bodyParser = require('body-parser');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var request = require('request');
@@ -8,6 +9,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 3000);
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended: false})); //needed for req.body
 
 app.get('/',function(req,res,next){
   var context = {};
@@ -16,11 +18,9 @@ app.get('/',function(req,res,next){
       next(err);
       return;
     }
-    //context.results = JSON.stringify(rows);
     res.render('home', {rows: rows});
   });
 });
-
 
 app.get('/reset-table',function(req,res,next){
   var context = {};
@@ -37,6 +37,16 @@ app.get('/reset-table',function(req,res,next){
       res.render('home',context);
     })
   });
+});
+
+app.post('/delete', function(req, res, next) {
+    mysql.pool.query("DELETE FROM workouts WHERE id=?", [req.body.id], function(err, result) {
+        if(err) {
+            next(err);
+            return;
+        }
+        res.send(req.body);
+    });
 });
 
 app.use(function(req,res){

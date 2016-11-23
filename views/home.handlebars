@@ -14,17 +14,17 @@
     </thead>
     <tbody>
     	{{#each rows}}
-    	<tr>
+    	<tr id="workout-{{{id}}}">
     		<td>{{name}}</td>
     		<td>{{reps}}</td>
     		<td>{{weight}}</td>
     		<td>{{date}}</td>
     		<td>{{lbs}}</td>
     		<td>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default edit-row" id={{id}}>
 					<span class="glyphicon glyphicon-pencil"></span>
 				</button>
-				<button type="button" class="btn btn-default">
+				<button type="button" class="btn btn-default delete-row" id={{id}}>
 					<span class="glyphicon glyphicon-trash"></span>
 				</button>
     		</td>
