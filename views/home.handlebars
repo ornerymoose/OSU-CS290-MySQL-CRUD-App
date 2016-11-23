@@ -18,7 +18,7 @@
 		<input type="date" name="date" class="form-control" id="workout-date" placeholder="Enter Date">
 	</div>
 		<div class="form-group">
-		<button type="submit" class="btn btn-primary insert-data">Submit New Workout</button>
+		<button type="submit" class="btn btn-info insert-data">Submit New Workout</button>
 	</div>
 </form>
 
@@ -43,12 +43,46 @@
     		<td>{{date}}</td>
     		<td>{{lbs}}</td>
     		<td>
-				<button type="button" class="btn btn-default edit-row" id={{id}}>
+				<button type="button" class="btn btn-default edit-row" id={{id}} data-id={{id}} data-name={{name}} data-date={{date}} data-weight={{weight}} data-reps={{reps}} data-weight={{weight}} data-toggle="modal" data-target="#myModal">
 					<span class="glyphicon glyphicon-pencil"></span>
 				</button>
 				<button type="button" class="btn btn-default delete-row" id={{id}}>
 					<span class="glyphicon glyphicon-trash"></span>
 				</button>
+				<!-- Modal -->
+				<div class="modal fade" id="myModal" data-id={{id}} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+				    	<div class="modal-content">
+				      		<div class="modal-header">
+				        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        		<h4 class="modal-title" id="myModalLabel">Editing Workout: <span id="workout-title"></span></h4>
+				      		</div>
+				      		<div class="modal-body">
+				      			<div class="form-group">
+									<label for="">Name</label>
+									<input type="text" class="form-control" id="workout-name-edit" value="">
+								</div>
+				        		<div class="form-group">
+									<label for="">Reps</label>
+									<input type="number" class="form-control" id="workout-reps-edit" value="">
+								</div>
+								<div class="form-group">
+									<label for="">Weight</label>
+									<input type="number" class="form-control" id="workout-weight-edit" value="">
+								</div>
+								<div class="form-group">
+									<label for="">Date</label>
+									<input type="date" class="form-control" id="workout-date-edit" value="">
+								</div>
+				      		</div>
+				      		<div class="modal-footer">
+				        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        		<button type="button" class="btn btn-primary">Save changes</button>
+				      		</div>
+				    	</div>
+				  	</div>
+				</div>
+				<!-- Modal End -->
     		</td>
     	</tr>
     	{{/each}}

@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: false})); //needed for req.body
 
 app.get('/',function(req,res,next){
   var context = {};
-  mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields){
+  mysql.pool.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM workouts', function(err, rows, fields){
     if(err){
       next(err);
       return;
@@ -53,6 +53,44 @@ app.post('/insert', function(req, res) {
         }
         req.body.id = results.insertId;
         res.send(req.body);
+    });
+});
+
+app.post('/update', function(req, res, next) {
+    mysql.pool.query("SELECT * FROM workouts WHERE id=(?)", [req.body.id], function(err, results) {
+        if(err) {
+            next(err);
+            return;
+        }   
+        if(results.length == 1) {
+            var curVals = results[0];
+            mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=? ",
+                [req.body.name || curVals.name, 
+                req.body.reps || curVals.reps,
+                req.body.weight || curVals.weight,
+                req.body.date || curVals.date,
+                req.body.lbs || curVals.lbs,
+                req.body.id],
+                function(err, iresult) {
+                    if(err) {
+                        console.log("error2");
+                        next(err);
+                        return;
+                    }
+                    mysql.pool.query('SELECT * FROM workouts WHERE id=(?)', [req.body.id], function(err,row,fields) {
+                   	if (err) {
+                        console.log(err);
+                        next(err);
+                        return;
+                    }
+                        console.log(row[0]);
+                        res.send(row[0]);
+                    });
+                });
+        }
+        else {
+        	console.log("No results found... is id missing?");
+        }
     });
 });
 
