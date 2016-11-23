@@ -39,6 +39,23 @@ app.get('/reset-table',function(req,res,next){
   });
 });
 
+app.post('/insert', function(req, res) {
+    if (req.body.lbs === "true") {
+        req.body.lbs = 1;
+    }
+    else {
+        req.body.lbs = 0;
+    }
+    mysql.pool.query("INSERT INTO workouts SET ?", req.body, function(err, results) {
+    	if (err) {
+			next(err);
+			return;
+        }
+        req.body.id = results.insertId;
+        res.send(req.body);
+    });
+});
+
 app.post('/delete', function(req, res, next) {
     mysql.pool.query("DELETE FROM workouts WHERE id=?", [req.body.id], function(err, result) {
         if(err) {
