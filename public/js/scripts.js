@@ -36,8 +36,9 @@ $(document).ready(function(){
 		});	
 	});
 
+	//http://stackoverflow.com/questions/680241/resetting-a-multi-stage-form-with-jquery
 	function resetForm($form) {
-    	$form.find('input:text, input[type=number], input[type=date]').val('');
-    	$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+		$form.find('input:text, input[type=number], input[type=date]').val('');
+		$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
 	}
 });
