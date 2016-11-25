@@ -1,4 +1,12 @@
 $(document).ready(function(){
+	$('.insert-data').prop('disabled', true);
+	$('#workout-name').keyup(function() {
+		if ($(this).val().length <= 3) {
+			$('.insert-data').prop('disabled', true);
+        } else {
+        	$('.insert-data').prop('disabled', false);
+        }
+    });
 	$(document).on('click', '.insert-data', function() {
 		console.log("inside insert-data click event");
 		var data = $("#insert-form").serializeArray();
@@ -18,6 +26,7 @@ $(document).ready(function(){
 				//need to add in logic if there is currently no rows, it wouldnt be append itd be create
 				$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>" + data.lbs + "</td><td>" + editAndDeleteButtons + "</td></tr>");
 				resetForm($('form'));
+				$('.insert-data').prop('disabled', true);
 			},
 			error: function(response) {
           		console.log("Error...");
