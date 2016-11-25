@@ -16,6 +16,11 @@
 		<label for="">Date</label>
 		<input type="date" name="date" class="form-control" id="workout-date" placeholder="Enter Date">
 	</div>
+	<div class="form-group">
+		<label for="">Lbs/Kgs (Checked Indicates Lbs)
+			<input type="checkbox" name="lbs" value="true" checked>
+		</label>
+	</div>
 		<div class="form-group">
 		<button type="submit" class="btn btn-info insert-data">Submit New Workout</button>
 	</div>
@@ -29,7 +34,7 @@
 			<th>Reps</th>
 			<th>Weight</th>
 			<th>Date</th>
-			<th>Lbs</th>
+			<th>Measurement</th>
 			<th>Action</th>
     	</tr>
     </thead>
@@ -73,6 +78,10 @@
 									<div class="form-group">
 										<label>Date</label>
 										<input type="date" name="update-date" class="form-control" id="workout-date-edit" value="">
+									</div>
+									<div class="form-group">
+										<label>Lbs or Kgs (Checked means Lbs)</label>
+										<input type="checkbox" name="lbs-edit" id="workout-lbs-edit" value="">
 									</div>
 								</form>
 				      		</div>

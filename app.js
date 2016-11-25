@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: false})); //needed for req.body
 
 app.get('/',function(req,res,next){
   var context = {};
-  mysql.pool.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM workouts', function(err, rows, fields){
+  mysql.pool.query("SELECT id, name, reps, weight, date, case when lbs=1 then 'Lbs' when lbs=0 then 'Kgs' end as lbs, DATE_FORMAT(date, '%Y-%m-%d') AS date FROM workouts;", function(err, rows, fields){
     if(err){
       next(err);
       return;
@@ -75,6 +75,14 @@ app.get('/update',function(req,res,next){
     }
     if(result.length == 1){
       var curVals = result[0];
+      //need to look over this. Works but a bit janky.
+      if (curVals.lbs == 0) {
+        req.query.lbs = 1;
+      } else if (curVals.lbs == 0) {
+        req.query.lbs = 1;
+      }
+      //console.log("req.query.lbs: " + req.query.lbs);
+      //console.log("curVals.lbs: " + curVals.lbs);
       mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=? ",
        	[req.query.name || curVals.name, req.query.reps || curVals.reps, req.query.weight || curVals.weight, req.query.date || curVals.date, req.query.lbs || curVals.lbs, req.query.id],
         function(err, result){

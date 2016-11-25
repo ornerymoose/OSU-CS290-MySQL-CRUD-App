@@ -7,10 +7,16 @@ $(document).ready(function(){
 			type: "post",
 			url: "/insert",
 			success: function(data){
+				console.log("data.lbs: " + data.lbs);
+				if (data.lbs == 1){
+					data.lbs = "Lbs"
+				} else {
+					data.lbs = "Kgs";
+				}
 				var editAndDeleteButtons = '<button type="button" class="btn btn-default edit-row" id="' + data.id + '" data-toggle="modal" data-date="' + data.date + '" data-weight="' + data.weight + '" data-reps="' + data.reps + '" data-id="' + data.id + '" data-name="' + data.name + '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button type="button" class="btn btn-default delete-row"  id="'+data.id+'"><span class="glyphicon glyphicon-trash"></span></button>';
 				console.log("data.name: " + data.name);
 				//need to add in logic if there is currently no rows, it wouldnt be append itd be create
-				$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
+				$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>" + data.lbs + "</td><td>" + editAndDeleteButtons + "</td></tr>");
 				resetForm($('form'));
 			},
 			error: function(response) {
@@ -23,6 +29,7 @@ $(document).ready(function(){
 
 	//to populate modal form with data
 	$('.table').on('click','.edit-row',function(){
+		var measurement = $(this).parent().parent().find('td:eq(4)').text();
 		$('#myModal').modal({
         keyboard: true,
         backdrop: "static",
@@ -42,6 +49,14 @@ $(document).ready(function(){
 			$("#workout-reps-edit").val(reps);
 			$("#workout-weight-edit").val(weight);
 			$("#workout-date-edit").val(date);
+
+			if (measurement == "Lbs"){
+				$("#workout-lbs-edit").prop('checked', true);	
+				$("#workout-lbs-edit").val(1);
+			} else {
+				$("#workout-lbs-edit").prop('checked', false);
+				$("#workout-lbs-edit").val(0);
+			}
 	    });
 	});
 
@@ -52,19 +67,29 @@ $(document).ready(function(){
     	var weight = $("#workout-weight-edit").val();
     	var date = $("#workout-date-edit").val();
     	var reps = $("#workout-reps-edit").val();
-    	var lbs = 1;
-    	var payload = {id: id, name: name, reps: reps, weight: weight, date: date, lbs: lbs};
+    	var lbs = $("#workout-lbs-edit").val(); //gets old value
+
+    	var measurementFlag;
+    	if (lbs == 1){
+    		lbs = 0;
+    		measurementFlag = "Kgs";
+    		//console.log("measurementFlag: " + measurementFlag);
+    	} else if (lbs == 0) {
+    		lbs = 1;
+    		measurementFlag = "Lbs";
+    		//console.log("measurementFlag: " + measurementFlag);
+    	}
+    	console.log("#workout-reps-edit: " + lbs);
+    	var payload = {id: id, name: name, reps: reps, weight: weight, date: date, lbs: measurementFlag};
 		$.ajax({
 			data: payload,
 			type: "get",
 			url: "/update",
 			success: function(data){
-				console.log("AJAX SUCCESS - update in success block...");
 				console.log(JSON.parse(JSON.stringify(data)));;
 				var editAndDeleteButtons = '<button type="button" class="btn btn-default edit-row" id="' + payload.id + '" data-toggle="modal" data-date="' + payload.date + '" data-weight="' + payload.weight + '" data-reps="' + payload.reps + '" data-id="' + payload.id + '" data-name="' + payload.name + '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button type="button" class="btn btn-default delete-row"  id="'+payload.id+'"><span class="glyphicon glyphicon-trash"></span></button>';
 				//need to add in logic if there is currently no rows, it wouldnt be append itd be create
-				//$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
-				$("#workout-"+payload.id).replaceWith("<tr id='workout-"+payload.id+"'><td>" + payload.name + "</td><td>" + payload.reps + "</td><td>" + payload.weight + "</td><td>" + payload.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
+				$("#workout-"+payload.id).replaceWith("<tr id='workout-"+payload.id+"'><td>" + payload.name + "</td><td>" + payload.reps + "</td><td>" + payload.weight + "</td><td>" + payload.date + "</td><td>" + payload.lbs + "</td><td>" + editAndDeleteButtons + "</td></tr>");
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
           		console.log("Error...");
