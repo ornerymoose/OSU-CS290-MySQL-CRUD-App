@@ -48,49 +48,11 @@ app.post('/insert', function(req, res) {
     }
     mysql.pool.query("INSERT INTO workouts SET ?", req.body, function(err, results) {
     	if (err) {
-			next(err);
+    		console.log("INSERT err: " + err);
 			return;
         }
         req.body.id = results.insertId;
         res.send(req.body);
-    });
-});
-
-app.post('/update', function(req, res, next) {
-    mysql.pool.query("SELECT * FROM workouts WHERE id=(?)", [req.body.id], function(err, results) {
-        if(err) {
-            next(err);
-            return;
-        }   
-        if(results.length == 1) {
-            var curVals = results[0];
-            mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=? ",
-                [req.body.name || curVals.name, 
-                req.body.reps || curVals.reps,
-                req.body.weight || curVals.weight,
-                req.body.date || curVals.date,
-                req.body.lbs || curVals.lbs,
-                req.body.id],
-                function(err, iresult) {
-                    if(err) {
-                        console.log("error2");
-                        next(err);
-                        return;
-                    }
-                    mysql.pool.query('SELECT * FROM workouts WHERE id=(?)', [req.body.id], function(err,row,fields) {
-                   	if (err) {
-                        console.log(err);
-                        next(err);
-                        return;
-                    }
-                        console.log(row[0]);
-                        res.send(row[0]);
-                    });
-                });
-        }
-        else {
-        	console.log("No results found... is id missing?");
-        }
     });
 });
 
@@ -102,6 +64,31 @@ app.post('/delete', function(req, res, next) {
         }
         res.send(req.body);
     });
+});
+
+app.get('/update',function(req,res,next){
+  var context = {};
+  mysql.pool.query("SELECT * FROM workouts WHERE id=?", [req.query.id], function(err, result){
+    if(err){
+      next(err);
+      return;
+    }
+    if(result.length == 1){
+      var curVals = result[0];
+      mysql.pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=? ",
+       	[req.query.name || curVals.name, req.query.reps || curVals.reps, req.query.weight || curVals.weight, req.query.date || curVals.date, req.query.lbs || curVals.lbs, req.query.id],
+        function(err, result){
+        if(err){
+        	console.log("ERR: " + err);
+          next(err);
+          return;
+        }
+        console.log(result.changedRows);
+        context.results = "Updated " + result.changedRows + " rows.";
+        res.send(context);
+      });
+    }
+  });
 });
 
 app.use(function(req,res){
@@ -118,4 +105,3 @@ app.use(function(err, req, res, next){
 app.listen(app.get('port'), function(){
   console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
-

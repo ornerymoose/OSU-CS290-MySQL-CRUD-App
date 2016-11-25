@@ -1,29 +1,14 @@
 $(document).ready(function(){
-	$('#myModal').modal({
-        keyboard: true,
-        backdrop: "static",
-        show:false,
-    //http://stackoverflow.com/questions/34288662/bootstrap-how-to-show-data-from-row-in-modal-window
-    }).on('show.bs.modal', function(e){
-		var id = $(e.relatedTarget).data('id');
-		var name = $(e.relatedTarget).data('name');
-		var reps = $(e.relatedTarget).data('reps');
-		var weight = $(e.relatedTarget).data('weight');
-		var date = $(e.relatedTarget).data('date');
-		$("#workout-title").html(name);
-		$("#workout-name-edit").val(name);
-		$("#workout-reps-edit").val(reps);
-		$("#workout-weight-edit").val(weight);
-		$("#workout-date-edit").val(date);
-    });
-	$(document).on('click','.insert-data',function() {
-		var data = $("form").serializeArray();
+	$(document).on('click', '.insert-data', function() {
+		console.log("inside insert-data click event");
+		var data = $("#insert-form").serializeArray();
 		$.ajax({
 			data: data,
 			type: "post",
 			url: "/insert",
 			success: function(data){
 				var editAndDeleteButtons = '<button type="button" class="btn btn-default edit-row" id="' + data.id + '" data-toggle="modal" data-date="' + data.date + '" data-weight="' + data.weight + '" data-reps="' + data.reps + '" data-id="' + data.id + '" data-name="' + data.name + '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button type="button" class="btn btn-default delete-row"  id="'+data.id+'"><span class="glyphicon glyphicon-trash"></span></button>';
+				console.log("data.name: " + data.name);
 				//need to add in logic if there is currently no rows, it wouldnt be append itd be create
 				$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
 				resetForm($('form'));
@@ -33,9 +18,63 @@ $(document).ready(function(){
           		console.log(response);
       		}
 		});
-		
 		return false;
 	});
+
+	//to populate modal form with data
+	$('.table').on('click','.edit-row',function(){
+		$('#myModal').modal({
+        keyboard: true,
+        backdrop: "static",
+        show:false,
+    	//http://stackoverflow.com/questions/34288662/bootstrap-how-to-show-data-from-row-in-modal-window
+	    }).on('show.bs.modal', function(e){
+			var id = $(e.relatedTarget).data('id');
+			console.log("this modal id: " + id);
+			$(".update-submit").attr('id', id);
+			var name = $(e.relatedTarget).attr('data-name');
+			console.log("DATA NAME: " + name);
+			var reps = $(e.relatedTarget).data('reps');
+			var weight = $(e.relatedTarget).data('weight');
+			var date = $(e.relatedTarget).data('date');
+			$("#workout-title").html(name);
+			$("#workout-name-edit").val(name);
+			$("#workout-reps-edit").val(reps);
+			$("#workout-weight-edit").val(weight);
+			$("#workout-date-edit").val(date);
+	    });
+	});
+
+	$(document).on('click','.update-submit',function() {
+		var id = $(this).attr('id');
+    	$(".modal").modal('hide');
+    	var name = $("#workout-name-edit").val();
+    	var weight = $("#workout-weight-edit").val();
+    	var date = $("#workout-date-edit").val();
+    	var reps = $("#workout-reps-edit").val();
+    	var lbs = 1;
+    	var payload = {id: id, name: name, reps: reps, weight: weight, date: date, lbs: lbs};
+		$.ajax({
+			data: payload,
+			type: "get",
+			url: "/update",
+			success: function(data){
+				console.log("AJAX SUCCESS - update in success block...");
+				console.log(JSON.parse(JSON.stringify(data)));;
+				var editAndDeleteButtons = '<button type="button" class="btn btn-default edit-row" id="' + payload.id + '" data-toggle="modal" data-date="' + payload.date + '" data-weight="' + payload.weight + '" data-reps="' + payload.reps + '" data-id="' + payload.id + '" data-name="' + payload.name + '" data-target="#myModal"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<button type="button" class="btn btn-default delete-row"  id="'+payload.id+'"><span class="glyphicon glyphicon-trash"></span></button>';
+				//need to add in logic if there is currently no rows, it wouldnt be append itd be create
+				//$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
+				$("#workout-"+payload.id).replaceWith("<tr id='workout-"+payload.id+"'><td>" + payload.name + "</td><td>" + payload.reps + "</td><td>" + payload.weight + "</td><td>" + payload.date + "</td><td>testLbs" + "</td><td>" + editAndDeleteButtons + "</td></tr>");
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+          		console.log("Error...");
+          		console.log("XMLHttpRequest: " + XMLHttpRequest);
+          		console.log("textStatus: " + textStatus);
+          		console.log("errorThrown: " + errorThrown)
+      		}
+		});
+		return false;
+    });
 
 	$('.table').on('click','.delete-row',function(){
 		var id = $(this).attr('id');

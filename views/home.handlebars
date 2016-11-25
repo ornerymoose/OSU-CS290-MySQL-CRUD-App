@@ -1,6 +1,5 @@
 <h3>Workouts</h3>
-
-<form>
+<form id="insert-form">
 	<div class="form-group">
 		<label for="name">Workout Name</label>
 		<input type="text" name="name" class="form-control" id="workout-name" placeholder="Enter Workout Name">
@@ -58,26 +57,28 @@
 				        		<h4 class="modal-title" id="myModalLabel">Editing Workout: <span id="workout-title"></span></h4>
 				      		</div>
 				      		<div class="modal-body">
-				      			<div class="form-group">
-									<label for="">Name</label>
-									<input type="text" class="form-control" id="workout-name-edit" value="">
-								</div>
-				        		<div class="form-group">
-									<label for="">Reps</label>
-									<input type="number" class="form-control" id="workout-reps-edit" value="">
-								</div>
-								<div class="form-group">
-									<label for="">Weight</label>
-									<input type="number" class="form-control" id="workout-weight-edit" value="">
-								</div>
-								<div class="form-group">
-									<label for="">Date</label>
-									<input type="date" class="form-control" id="workout-date-edit" value="">
-								</div>
+				      			<form id="update-form">
+					      			<div class="form-group">
+										<label>Name</label>
+										<input type="text" name="update-name" class="form-control" id="workout-name-edit" value="">
+									</div>
+					        		<div class="form-group">
+										<label>Reps</label>
+										<input type="number" name="update-reps" class="form-control" id="workout-reps-edit" value="">
+									</div>
+									<div class="form-group">
+										<label>Weight</label>
+										<input type="number" name="update-weight" class="form-control" id="workout-weight-edit" value="">
+									</div>
+									<div class="form-group">
+										<label>Date</label>
+										<input type="date" name="update-date" class="form-control" id="workout-date-edit" value="">
+									</div>
+								</form>
 				      		</div>
 				      		<div class="modal-footer">
 				        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				        		<button type="button" class="btn btn-primary">Save changes</button>
+				        		<button type="button" id={{id}} class="btn btn-primary update-submit">Save changes</button>
 				      		</div>
 				    	</div>
 				  	</div>
@@ -87,7 +88,6 @@
     	</tr>
     	{{/each}}
     </tbody>
-
 </table>
 {{/if}}
 
