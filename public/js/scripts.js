@@ -46,10 +46,8 @@ $(document).ready(function(){
     	//http://stackoverflow.com/questions/34288662/bootstrap-how-to-show-data-from-row-in-modal-window
 	    }).on('show.bs.modal', function(e){
 			var id = $(e.relatedTarget).data('id');
-			console.log("this modal id: " + id);
 			$(".update-submit").attr('id', id);
 			var name = $(e.relatedTarget).attr('data-name');
-			console.log("DATA NAME: " + name);
 			var reps = $(e.relatedTarget).data('reps');
 			var weight = $(e.relatedTarget).data('weight');
 			var date = $(e.relatedTarget).data('date');
@@ -58,7 +56,6 @@ $(document).ready(function(){
 			$("#workout-reps-edit").val(reps);
 			$("#workout-weight-edit").val(weight);
 			$("#workout-date-edit").val(date);
-
 			if (measurement == "Lbs"){
 				$("#workout-lbs-edit").prop('checked', true);	
 				$("#workout-lbs-edit").val(1);
@@ -76,17 +73,15 @@ $(document).ready(function(){
     	var weight = $("#workout-weight-edit").val();
     	var date = $("#workout-date-edit").val();
     	var reps = $("#workout-reps-edit").val();
-    	var lbs = $("#workout-lbs-edit").val(); //gets old value
+    	var lbs = $("#workout-lbs-edit").val();
 
     	var measurementFlag;
     	if (lbs == 1){
     		lbs = 0;
     		measurementFlag = "Kgs";
-    		//console.log("measurementFlag: " + measurementFlag);
     	} else if (lbs == 0) {
     		lbs = 1;
     		measurementFlag = "Lbs";
-    		//console.log("measurementFlag: " + measurementFlag);
     	}
     	console.log("#workout-reps-edit: " + lbs);
     	var payload = {id: id, name: name, reps: reps, weight: weight, date: date, lbs: measurementFlag};
