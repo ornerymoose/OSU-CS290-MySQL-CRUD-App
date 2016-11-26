@@ -12,7 +12,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false})); //needed for req.body
 
 app.get('/',function(req,res,next){
-  var context = {};
   mysql.pool.query("SELECT id, name, reps, weight, date, case when lbs=1 then 'Lbs' when lbs=0 then 'Kgs' end as lbs, DATE_FORMAT(date, '%Y-%m-%d') AS date FROM workouts;", function(err, rows, fields){
     if(err){
       next(err);
