@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	editTableData();
 	$('.insert-data').prop('disabled', true);
 	$('#workout-name').keyup(function() {
 		if ($(this).val().length <= 3) {
@@ -36,8 +37,6 @@ $(document).ready(function(){
 		});
 		return false;
 	});
-
-	editTableData();
 
 	$(document).on('click','.update-submit',function() {
 		var id = $(this).attr('id');
