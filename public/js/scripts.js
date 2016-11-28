@@ -27,6 +27,7 @@ $(document).ready(function(){
 				$('.table tbody').append("<tr id='workout-"+data.id+"'><td>" + data.name + "</td><td>" + data.reps + "</td><td>" + data.weight + "</td><td>" + data.date + "</td><td>" + data.lbs + "</td><td>" + editAndDeleteButtons + "</td></tr>");
 				resetForm($('form'));
 				$('.insert-data').prop('disabled', true);
+				editTableData();
 			},
 			error: function(response) {
           		console.log("Error...");
@@ -36,35 +37,7 @@ $(document).ready(function(){
 		return false;
 	});
 
-	//to populate modal form with data
-	$('.table').on('click','.edit-row',function(){
-		var measurement = $(this).parent().parent().find('td:eq(4)').text();
-		$('#myModal').modal({
-        keyboard: true,
-        backdrop: "static",
-        show:false,
-    	//http://stackoverflow.com/questions/34288662/bootstrap-how-to-show-data-from-row-in-modal-window
-	    }).on('show.bs.modal', function(e){
-			var id = $(e.relatedTarget).data('id');
-			$(".update-submit").attr('id', id);
-			var name = $(e.relatedTarget).attr('data-name');
-			var reps = $(e.relatedTarget).data('reps');
-			var weight = $(e.relatedTarget).data('weight');
-			var date = $(e.relatedTarget).data('date');
-			$("#workout-title").html(name);
-			$("#workout-name-edit").val(name);
-			$("#workout-reps-edit").val(reps);
-			$("#workout-weight-edit").val(weight);
-			$("#workout-date-edit").val(date);
-			if (measurement == "Lbs"){
-				$("#workout-lbs-edit").prop('checked', true);	
-				$("#workout-lbs-edit").val(1);
-			} else {
-				$("#workout-lbs-edit").prop('checked', false);
-				$("#workout-lbs-edit").val(0);
-			}
-	    });
-	});
+	editTableData();
 
 	$(document).on('click','.update-submit',function() {
 		var id = $(this).attr('id');
@@ -128,3 +101,35 @@ $(document).ready(function(){
 		$form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
 	}
 });
+
+function editTableData(){
+	$('.table').on('click','.edit-row',function(){
+		console.log("edit-row button was clicked...");
+		var measurement = $(this).parent().parent().find('td:eq(4)').text();
+		$('#myModal').modal({
+    		keyboard: true,
+    		backdrop: "static",
+    		show:false,
+			//http://stackoverflow.com/questions/34288662/bootstrap-how-to-show-data-from-row-in-modal-window
+    	}).on('show.bs.modal', function(e){
+			var id = $(e.relatedTarget).data('id');
+			$(".update-submit").attr('id', id);
+			var name = $(e.relatedTarget).attr('data-name');
+			var reps = $(e.relatedTarget).data('reps');
+			var weight = $(e.relatedTarget).data('weight');
+			var date = $(e.relatedTarget).data('date');
+			$("#workout-title").html(name);
+			$("#workout-name-edit").val(name);
+			$("#workout-reps-edit").val(reps);
+			$("#workout-weight-edit").val(weight);
+			$("#workout-date-edit").val(date);
+			if (measurement == "Lbs"){
+				$("#workout-lbs-edit").prop('checked', true);	
+				$("#workout-lbs-edit").val(1);
+			} else {
+				$("#workout-lbs-edit").prop('checked', false);
+				$("#workout-lbs-edit").val(0);
+			}
+	    });
+	});
+}
