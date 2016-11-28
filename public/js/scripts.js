@@ -47,16 +47,14 @@ $(document).ready(function(){
     	var date = $("#workout-date-edit").val();
     	var reps = $("#workout-reps-edit").val();
     	var lbs = $("#workout-lbs-edit").val();
-
+    	console.log("lbs value: " + lbs);
     	var measurementFlag;
     	if (lbs == 1){
-    		lbs = 0;
     		measurementFlag = "Kgs";
     	} else if (lbs == 0) {
-    		lbs = 1;
     		measurementFlag = "Lbs";
     	}
-    	console.log("#workout-reps-edit: " + lbs);
+    	//console.log("#workout-reps-edit: " + lbs);
     	var payload = {id: id, name: name, reps: reps, weight: weight, date: date, lbs: measurementFlag};
 		$.ajax({
 			data: payload,
